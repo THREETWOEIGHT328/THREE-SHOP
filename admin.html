@@ -5,260 +5,236 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบจัดการสต็อกหลังบ้าน - THREE SHOP</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body { background-color: #0b0c10; color: #ffffff; font-family: 'Kanit', sans-serif; }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght=300;400;600&display=swap" rel="stylesheet">
 </head>
-<body class="p-6 md:p-12 min-h-screen flex flex-col items-center justify-start space-y-8">
+<body class="p-6 md:p-12 min-h-screen">
 
-    <div class="w-full max-w-4xl bg-zinc-950/80 border border-amber-500/30 p-8 rounded-3xl shadow-2xl space-y-8">
-        
-        <div class="flex items-center space-x-3 border-b border-zinc-800 pb-4">
-            <span class="text-3xl">🤫</span>
-            <h2 class="text-2xl font-black text-amber-400 tracking-wide">ระบบจัดการสต็อกและราคา (แอดมิน THREE SHOP)</h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <div class="bg-zinc-900/40 border border-zinc-800 p-5 rounded-2xl space-y-4">
-                <h3 class="text-sm font-bold text-purple-400 flex items-center">📦 ตัวเลือก: 1 วัน</h3>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">แก้ไขราคา (บาท)</label>
-                    <input type="number" id="price-opt1" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white outline-none font-bold focus:border-purple-500">
-                </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกในระบบ (ชิ้น)</label>
-                    <input type="number" id="display-stock-opt1" readonly class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-500 outline-none font-bold" value="0">
-                </div>
-                <div class="pt-2 border-t border-zinc-800/60">
-                    <label class="block text-xs text-amber-400 font-bold mb-1">➕ เพิ่มคีย์สินค้าเข้าระบบ</label>
-                    <input type="text" id="add-key-opt1" placeholder="กรอกรหัสคีย์ 1 วัน..." class="w-full bg-zinc-950 border border-emerald-500/30 rounded-xl p-2 text-xs text-white outline-none font-mono focus:border-emerald-500">
-                    <button onclick="addKeyToStock('opt1')" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-xl text-xs transition">เพิ่มคีย์ 1 วัน</button>
-                </div>
+    <div class="max-w-6xl mx-auto space-y-8">
+        <!-- ส่วนหัว -->
+        <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
+            <div>
+                <h1 class="text-2xl font-black text-orange-500">🛠️ THREE SHOP ADMIN CONTROL</h1>
+                <p class="text-xs text-zinc-400 mt-1">ระบบจัดการคีย์ สต็อกสินค้า และยอดเงินลูกค้า (เชื่อมต่อ Server กลาง)</p>
             </div>
-
-            <div class="bg-zinc-900/40 border border-zinc-800 p-5 rounded-2xl space-y-4">
-                <h3 class="text-sm font-bold text-purple-400 flex items-center">📦 ตัวเลือก: 7 วัน</h3>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">แก้ไขราคา (บาท)</label>
-                    <input type="number" id="price-opt2" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white outline-none font-bold focus:border-purple-500">
-                </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกในระบบ (ชิ้น)</label>
-                    <input type="number" id="display-stock-opt2" readonly class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-500 outline-none font-bold" value="0">
-                </div>
-                <div class="pt-2 border-t border-zinc-800/60">
-                    <label class="block text-xs text-amber-400 font-bold mb-1">➕ เพิ่มคีย์สินค้าเข้าระบบ</label>
-                    <input type="text" id="add-key-opt2" placeholder="กรอกรหัสคีย์ 7 วัน..." class="w-full bg-zinc-950 border border-emerald-500/30 rounded-xl p-2 text-xs text-white outline-none font-mono focus:border-emerald-500">
-                    <button onclick="addKeyToStock('opt2')" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-xl text-xs transition">เพิ่มคีย์ 7 วัน</button>
-                </div>
-            </div>
-
-            <div class="bg-zinc-900/40 border border-zinc-800 p-5 rounded-2xl space-y-4">
-                <h3 class="text-sm font-bold text-amber-400 flex items-center">📦 ตัวเลือก: ถาวร (ตลอดชีพ)</h3>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">แก้ไขราคา (บาท)</label>
-                    <input type="number" id="price-opt3" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white outline-none font-bold focus:border-amber-500">
-                </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกในระบบ (ชิ้น)</label>
-                    <input type="number" id="display-stock-opt3" readonly class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-500 outline-none font-bold" value="0">
-                </div>
-                <div class="pt-2 border-t border-zinc-800/60">
-                    <label class="block text-xs text-amber-400 font-bold mb-1">➕ เพิ่มคีย์สินค้าเข้าระบบ</label>
-                    <input type="text" id="add-key-opt3" placeholder="กรอกรหัสคีย์ถาวร..." class="w-full bg-zinc-950 border border-emerald-500/30 rounded-xl p-2 text-xs text-white outline-none font-mono focus:border-emerald-500">
-                    <button onclick="addKeyToStock('opt3')" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-xl text-xs transition">เพิ่มคีย์ถาวร</button>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="bg-zinc-900/20 border border-zinc-800 p-5 rounded-2xl space-y-4">
-            <h3 class="text-base font-bold text-white flex items-center">🔑 รายการคีย์รอขายในสต็อกปัจจุบัน</h3>
-            <div id="admin-key-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full"></div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-zinc-900 gap-4">
-            <p class="text-xs text-zinc-500">💡 ข้อมูลสต็อกและราคาจะแชร์ร่วมกับหน้าหลักลูกค้าในเครื่องนี้โดยตรง</p>
-            <button onclick="saveAdminSettings()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold py-3.5 px-8 rounded-xl transition text-sm shadow-lg flex items-center space-x-2">
-                <span>💾</span> <b>บันทึกราคาและสต็อก</b>
+            <button onclick="loadAdminData()" class="bg-zinc-900 border border-zinc-700 hover:bg-zinc-800 text-white text-xs px-4 py-2 rounded-xl transition">
+                🔄 รีเฟรชข้อมูลล่าสุด
             </button>
         </div>
 
-    </div>
-
-    <div class="w-full max-w-4xl bg-zinc-950/80 border border-red-500/30 p-8 rounded-3xl shadow-2xl space-y-6">
-        <div class="flex items-center space-x-3 border-b border-zinc-800 pb-4">
-            <span class="text-3xl">👥</span>
-            <h2 class="text-2xl font-black text-red-500 tracking-wide">รายชื่อผู้ใช้งานและระบบจัดการเงินลูกค้า</h2>
+        <!-- กล่องเพิ่มคีย์เข้าสต็อก -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- 1 วัน -->
+            <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-2xl space-y-3">
+                <h3 class="text-sm font-bold text-zinc-300">➕ เพิ่มสินค้าเข้าระบบ (1 วัน)</h3>
+                <input type="text" id="input-opt1" placeholder="กรอกรหัสคีย์ 1 วัน..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-orange-500">
+                <button onclick="addKeyToServer('opt1')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition">เพิ่มคีย์ 1 วัน</button>
+            </div>
+            <!-- 7 วัน -->
+            <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-2xl space-y-3">
+                <h3 class="text-sm font-bold text-zinc-300">➕ เพิ่มสินค้าเข้าระบบ (7 วัน)</h3>
+                <input type="text" id="input-opt2" placeholder="กรอกรหัสคีย์ 7 วัน..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-orange-500">
+                <button onclick="addKeyToServer('opt2')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition">เพิ่มคีย์ 7 วัน</button>
+            </div>
+            <!-- ถาวร -->
+            <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-2xl space-y-3">
+                <h3 class="text-sm font-bold text-amber-400">➕ เพิ่มสินค้าเข้าระบบ (ถาวร)</h3>
+                <input type="text" id="input-opt3" placeholder="กรอกรหัสคีย์ถาวร..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-amber-500">
+                <button onclick="addKeyToServer('opt3')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition">เพิ่มคีย์ถาวร</button>
+            </div>
         </div>
 
-        <p class="text-xs text-zinc-400">💡 ตารางนี้จะดึงข้อมูลคนที่มากดสมัครสมาชิกบนเครื่องนี้ขึ้นมาโชว์ แอดมินสามารถดูรหัสผ่าน และปรับเพิ่ม/ลดเงินในระบบให้ลูกค้าได้ทันทีครับ</p>
+        <!-- แสดงคีย์ทั้งหมดในเซิร์ฟเวอร์ -->
+        <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-2xl space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center">🔑 รายการคีย์รอขายในระบบปัจจุบัน</h3>
+            <div id="admin-keys-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <!-- ข้อมูลคีย์จะถูกโหลดมาแสดงตรงนี้ -->
+                <p class="text-zinc-600 text-xs">กำลังโหลดคีย์จากระบบ...</p>
+            </div>
+        </div>
 
-        <div class="overflow-x-auto rounded-xl border border-zinc-800">
-            <table class="w-full text-left text-sm text-zinc-300">
-                <thead class="bg-zinc-900 text-zinc-100 font-bold border-b border-zinc-800">
-                    <tr>
-                        <th class="py-3 px-4">ชื่อผู้ใช้ (Username)</th>
-                        <th class="py-3 px-4 text-amber-400">รหัสผ่าน (Password)</th>
-                        <th class="py-3 px-4 text-emerald-400">เงินคงเหลือในระบบ</th>
-                        <th class="py-3 px-4 text-center">การจัดการ</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-user-table-body">
+        <!-- ตารางรายชื่อผู้ใช้ที่ดึงจาก Server -->
+        <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-2xl space-y-4">
+            <h2 class="text-xl font-bold text-red-500 flex items-center">👥 รายชื่อผู้ใช้งานและระบบจัดการเงินลูกค้า (ออนไลน์จริง)</h2>
+            <p class="text-xs text-zinc-400">💡 ตารางนี้ดึงข้อมูลจากระบบสมาชิกบน Render โดยตรง แอดมินสามารถปรับเงินของลูกค้าแต่ละคนได้ทันที</p>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-zinc-400">
+                    <thead class="bg-zinc-900 text-zinc-300 font-bold uppercase border-b border-zinc-800">
+                        <tr>
+                            <th class="py-3 px-4">ชื่อผู้ใช้ (Username)</th>
+                            <th class="py-3 px-4">รหัสผ่าน (Password)</th>
+                            <th class="py-3 px-4">เงินคงเหลือในระบบ</th>
+                            <th class="py-3 px-4">การจัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-users-table">
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-zinc-600">กำลังเชื่อมต่อข้อมูลผู้ใช้งานจากเซิร์ฟเวอร์กลาง...</td>
+                        </tr>
                     </tbody>
-            </table>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        // โหลดข้อมูลคีย์สินค้า (ปรับคีย์ให้ตรงกับหน้าลูกค้าหลักคือ shop_keys_stock)
-        let keyDatabase = JSON.parse(localStorage.getItem('shop_keys_stock'));
-        if (!keyDatabase) {
-            keyDatabase = {
-                opt1: ["FJQD-DT5W-HLVQ-SQT7", "6MG1-KRZC-Z4T1-YAW8", "LLU8-3EHC-1JNU-CRI4"],
-                opt2: ["DB4V-B8K2-LKZV-7T9Y", "YX3K-ELQ9-6CLZ-6GYO"],
-                opt3: ["KOUO-DYVV-WZKS-MO93"]
-            };
-            localStorage.setItem('shop_keys_stock', JSON.stringify(keyDatabase));
+        // 🔗 URL ระบบหลังบ้านของพี่
+        const API_URL = "https://three-shop-backend.onrender.com";
+
+        // โหลดข้อมูลทั้งหมดเมื่อเปิดหน้าเว็บ
+        async function loadAdminData() {
+            await loadUsersList();
+            await loadAllKeys();
         }
 
-        // โหลดข้อมูลราคา
-        let productPrices = JSON.parse(localStorage.getItem('shop_product_prices')) || {
-            opt1: 10,
-            opt2: 50,
-            opt3: 199
-        };
-
-        let productNames = { opt1: "1 วัน", opt2: "7 วัน", opt3: "ถาวร" };
-
-        function initAdminPage() {
-            // ดึงราคาใส่ Input
-            document.getElementById('price-opt1').value = productPrices.opt1;
-            document.getElementById('price-opt2').value = productPrices.opt2;
-            document.getElementById('price-opt3').value = productPrices.opt3;
-
-            // ดึงจำนวนสต็อกโชว์
-            document.getElementById('display-stock-opt1').value = keyDatabase.opt1.length;
-            document.getElementById('display-stock-opt2').value = keyDatabase.opt2.length;
-            document.getElementById('display-stock-opt3').value = keyDatabase.opt3.length;
-
-            renderKeyList();
-            renderUserTable(); // เรนเดอร์รายชื่อผู้ใช้เพิ่มเข้ามา
+        // 1. ดึงรายชื่อผู้ใช้และยอดเงินทั้งหมดจาก Render
+        async function loadUsersList() {
+            const tbody = document.getElementById('admin-users-table');
+            try {
+                let res = await fetch(`${API_URL}/api/admin/users`);
+                if (res.ok) {
+                    let users = await res.json();
+                    if(users.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-zinc-500">ยังไม่มีผู้สมัครสมาชิกในระบบหลังบ้าน</td></tr>`;
+                        return;
+                    }
+                    tbody.innerHTML = users.map(user => `
+                        <tr class="border-b border-zinc-900 hover:bg-zinc-900/40">
+                            <td class="py-3 px-4 font-bold text-white">👤 ${user.username}</td>
+                            <td class="py-3 px-4 font-mono text-zinc-500">${user.password || '******'}</td>
+                            <td class="py-3 px-4 text-emerald-400 font-bold">฿${user.balance}</td>
+                            <td class="py-3 px-4">
+                                <button onclick="editUserBalance('${user.username}', ${user.balance})" class="bg-zinc-900 border border-zinc-700 hover:border-orange-500 text-zinc-300 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
+                                    ⚙️ แก้ไขเงิน
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-red-400">❌ ไม่สามารถเชื่อมต่อฐานข้อมูลผู้ใช้บน Render ได้</td></tr>`;
+            }
         }
 
-        function addKeyToStock(opt) {
-            let inputField = document.getElementById(`add-key-${opt}`);
-            let keyValue = inputField.value.trim();
+        // 2. ดึงรายการคีย์สต็อกทั้งหมดในระบบหลังบ้านมาโชว์
+        async function loadAllKeys() {
+            const keysContainer = document.getElementById('admin-keys-list');
+            try {
+                let res = await fetch(`${API_URL}/api/admin/keys`);
+                if (res.ok) {
+                    let data = await res.json(); // จะได้ { opt1: [...], opt2: [...], opt3: [...] }
+                    let htmlContent = [];
 
-            if (!keyValue) {
-                alert("⚠️ กรุณากรอกตัวรหัสคีย์สินค้าก่อนกดเพิ่มครับพี่!");
+                    const typeNames = { opt1: '1 วัน', opt2: '7 วัน', opt3: 'ถาวร' };
+
+                    for (let type in data) {
+                        data[type].forEach((keyText, index) => {
+                            htmlContent.push(`
+                                <div class="bg-zinc-900 border border-zinc-800 p-3 rounded-xl flex justify-between items-center text-xs">
+                                    <div>
+                                        <span class="bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded font-bold mr-1.5">${typeNames[type]}</span>
+                                        <span class="font-mono text-zinc-400">${keyText}</span>
+                                    </div>
+                                    <button onclick="deleteKeyFromServer('${type}', ${index})" class="text-red-500 hover:text-red-400 font-bold ml-2">ลบ</button>
+                                </div>
+                            `);
+                        });
+                    }
+
+                    if(htmlContent.length === 0) {
+                        keysContainer.innerHTML = `<p class="text-zinc-600 text-xs col-span-3 text-center py-4">ไม่มีคีย์ค้างอยู่ในสต็อกระบบเลยในขณะนี้</p>`;
+                    } else {
+                        keysContainer.innerHTML = htmlContent.join('');
+                    }
+                }
+            } catch (e) {
+                keysContainer.innerHTML = `<p class="text-red-400 text-xs col-span-3 text-center">❌ โหลดข้อมูลคีย์ล้มเหลว</p>`;
+            }
+        }
+
+        // 3. ฟังก์ชันเพิ่มคีย์ใหม่เข้าไปในระบบฐานข้อมูล Render
+        async function addKeyToServer(optionKey) {
+            const inputField = document.getElementById(`input-${optionKey}`);
+            const keyText = inputField.value.trim();
+
+            if(!keyText) {
+                alert('❌ กรุณากรอกรหัสคีย์ก่อนกดเพิ่มครับพี่!');
                 return;
             }
 
-            keyDatabase[opt].push(keyValue);
-            localStorage.setItem('shop_keys_stock', JSON.stringify(keyDatabase));
-            
-            inputField.value = "";
-            initAdminPage();
-        }
-
-        function removeKeyFromStock(opt, index) {
-            if (confirm(`🔥 พี่ต้องการลบคีย์ของแพ็คเกจ ${productNames[opt]} ชิ้นนี้ใช่ไหมครับ?`)) {
-                keyDatabase[opt].splice(index, 1);
-                localStorage.setItem('shop_keys_stock', JSON.stringify(keyDatabase));
-                initAdminPage();
-            }
-        }
-
-        function renderKeyList() {
-            let container = document.getElementById('admin-key-list-container');
-            let html = "";
-            let keys = ['opt1', 'opt2', 'opt3'];
-
-            keys.forEach(opt => {
-                keyDatabase[opt].forEach((key, index) => {
-                    html += `
-                        <div class="flex justify-between items-center bg-zinc-950 p-2.5 px-4 rounded-xl border border-zinc-800 text-xs">
-                            <div class="flex items-center space-x-2">
-                                <span class="bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded text-[10px] font-bold">${productNames[opt]}</span>
-                                <span class="font-mono text-zinc-300 font-bold select-all">${key}</span>
-                            </div>
-                            <button onclick="removeKeyFromStock('${opt}', ${index})" class="text-red-500 hover:text-red-400 font-bold transition px-1">ลบ</button>
-                        </div>
-                    `;
+            try {
+                let res = await fetch(`${API_URL}/api/admin/add-key`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ optionKey, keyText })
                 });
-            });
-
-            if (html === "") {
-                html = `<p class="col-span-full text-zinc-600 text-xs text-center py-6 select-none">❌ ขณะนี้ไม่มีคีย์สินค้าค้างอยู่ในสต็อกระบบเลยครับพี่</p>`;
+                let data = await res.json();
+                if(res.ok) {
+                    inputField.value = '';
+                    await loadAllKeys();
+                    alert(`✅ เพิ่มคีย์สำเร็จเข้าฐานข้อมูลเรียบร้อย!`);
+                } else {
+                    alert(`❌ เพิ่มไม่สำเร็จ: ${data.message}`);
+                }
+            } catch(e) {
+                alert('❌ เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
             }
-            container.innerHTML = html;
         }
 
-        function saveAdminSettings() {
-            let p1 = document.getElementById('price-opt1').value;
-            let p2 = document.getElementById('price-opt2').value;
-            let p3 = document.getElementById('price-opt3').value;
+        // 4. ฟังก์ชันลบคีย์ออกจากระบบหลังบ้าน
+        async function deleteKeyFromServer(optionKey, index) {
+            if(!confirm('⚠️ พี่แน่ใจใช่ไหมครับที่จะลบคีย์นี้ออกจากสต็อกระบบ?')) return;
 
-            productPrices.opt1 = Number(p1) || 0;
-            productPrices.opt2 = Number(p2) || 0;
-            productPrices.opt3 = Number(p3) || 0;
-
-            localStorage.setItem('shop_product_prices', JSON.stringify(productPrices));
-            localStorage.setItem('shop_keys_stock', JSON.stringify(keyDatabase));
-
-            alert("💾 บันทึกการตั้งค่าราคาและสต็อกคีย์เรียบร้อยแล้วครับพี่!");
-            initAdminPage();
+            try {
+                let res = await fetch(`${API_URL}/api/admin/delete-key`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ optionKey, index })
+                });
+                if(res.ok) {
+                    await loadAllKeys();
+                    alert('🗑️ ลบคีย์ออกจากระบบเรียบร้อยครับพี่');
+                }
+            } catch(e) {
+                alert('❌ ลบคีย์ไม่สำเร็จ');
+            }
         }
 
-        // --- ฟังก์ชันจัดการข้อมูลผู้ใช้งานที่เพิ่มเข้ามาใหม่ ---
-        function renderUserTable() {
-            let usersData = JSON.parse(localStorage.getItem('shop_users_data')) || {};
-            let tbody = document.getElementById('admin-user-table-body');
-            let userKeys = Object.keys(usersData);
+        // 5. ฟังก์ชันแก้ไข/ปรับ/เพิ่ม/ลด เงินในบัญชีลูกค้ารายบุคคลบนระบบออนไลน์
+        async function editUserBalance(username, currentBalance) {
+            let newBalanceStr = prompt(`✍️ แก้ไขยอดเงินของแฮนเดิลคุณ [ ${username} ]\nยอดเงินปัจจุบัน: ฿${currentBalance}\n\nกรุณากรอกจำนวนตัวเลขยอดเงินใหม่ที่ต้องการตั้งค่า:`, currentBalance);
+            
+            if(newBalanceStr === null) return; // กดยกเลิก
+            let newBalance = parseFloat(newBalanceStr);
 
-            if (userKeys.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="text-center py-8 text-zinc-600 text-xs select-none">❌ ยังไม่มีลูกค้าสมัครสมาชิกเข้ามาในระบบเครื่องนี้เลยครับ</td>
-                    </tr>
-                `;
+            if (isNaN(newBalance) || newBalance < 0) {
+                alert('❌ กรุณากรอกจำนวนยอดเงินให้ถูกต้องเป็นตัวเลขที่มากกว่าหรือเท่ากับ 0 ครับพี่!');
                 return;
             }
 
-            let html = "";
-            userKeys.forEach(username => {
-                html += `
-                    <tr class="border-b border-zinc-900 hover:bg-zinc-900/30">
-                        <td class="py-3 px-4 font-bold text-white flex items-center mt-0.5">👤 ${username}</td>
-                        <td class="py-3 px-4 font-mono text-amber-400 font-bold">${usersData[username].password}</td>
-                        <td class="py-3 px-4 text-emerald-400 font-bold">฿${usersData[username].balance}</td>
-                        <td class="py-3 px-4 text-center">
-                            <button onclick="editUserMoney('${username}')" class="bg-zinc-900 hover:bg-zinc-800 text-white text-xs px-3 py-1.5 rounded-xl border border-zinc-700 transition">⚙️ แก้ไขเงิน</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
-        }
-
-        function editUserMoney(username) {
-            let usersData = JSON.parse(localStorage.getItem('shop_users_data')) || {};
-            let currentMoney = usersData[username].balance;
-            let newMoney = prompt(`💸 พิมพ์จำนวนเงินใหม่ที่ต้องการเซ็ตให้คุณ "${username}":`, currentMoney);
-            
-            if (newMoney !== null && !isNaN(newMoney) && newMoney.trim() !== "") {
-                usersData[username].balance = Number(newMoney);
-                localStorage.setItem('shop_users_data', JSON.stringify(usersData));
-                alert(`✅ เปลี่ยนยอดเงินของ ${username} เป็น ฿${newMoney} บาท เรียบร้อย!`);
-                renderUserTable();
+            try {
+                let res = await fetch(`${API_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username, newBalance })
+                });
+                let data = await res.json();
+                if(res.ok) {
+                    await loadUsersList();
+                    alert(`💰 อัปเดตเงินของคุณ ${username} เป็น ฿${newBalance} บาท เรียบร้อยแล้วครับพี่!`);
+                } else {
+                    alert(`❌ เปลี่ยนแปลงยอดเงินล้มเหลว: ${data.message}`);
+                }
+            } catch(e) {
+                alert('❌ เซิร์ฟเวอร์ไม่ตอบรับการปรับเงิน');
             }
         }
 
-        // รันคำสั่งทำงานเมื่อเปิดหน้าเว็บ
-        initAdminPage();
+        // เริ่มทำงานดึงข้อมูลตอนโหลดเสร็จ
+        window.onload = loadAdminData;
     </script>
 </body>
 </html>
