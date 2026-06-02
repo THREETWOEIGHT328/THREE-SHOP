@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการสต็อกหลังบ้าน - THREE SHOP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0b0c10; color: #ffffff; font-family: 'Kanit', sans-serif; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght=300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="p-6 md:p-12 min-h-screen flex flex-col items-center justify-center">
+
+    <div class="w-full max-w-4xl bg-zinc-950/80 border border-amber-500/30 p-8 rounded-3xl shadow-2xl space-y-8">
+        
+        <div class="flex items-center space-x-3 border-b border-zinc-800 pb-4">
+            <span class="text-3xl">🤫</span>
+            <h2 class="text-2xl font-black text-amber-400 tracking-wide">ระบบจัดการสต็อกหลังบ้าน (แอดมิน THREE SHOP)</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="bg-zinc-900/40 border border-zinc-800 p-5 rounded-2xl space-y-4">
+                <h3 class="text-sm font-bold text-purple-400 flex items-center">📦 ตัวเลือก: 1 วัน</h3>
+                <div>
+                    <label class="block text-xs text-zinc-400 mb-1">แก้ไขราคา (บาท)</label>
+                    <input type="number" id="price-opt1" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white outline-none font-bold focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกที่จะเติม (ชิ้น)</label>
+                    <input type="number" id="display-stock-opt1" readonly class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-500 outline-none font-bold" value="0">
+                </div>
+                <div class="pt-2 border-t border-zinc-800/60">
+                    <label class="block text-xs text-amber-400 font-bold mb-1">➕ เพิ่มคีย์สินค้าเข้าระบบ</label>
+                    <input type="text" id="add-key-opt1" placeholder="กรอกรหัสคีย์ 1 วัน..." class="w-full bg-zinc-950 border border-emerald-500/30 rounded-xl p-2 text-xs text-white outline-none font-mono focus:border-emerald-500">
+                    <button onclick="addKeyToStock('opt1')" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-xl text-xs transition">เพิ่มคีย์ 1 วัน</button>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900/40 border border-zinc-800 p-5 rounded-2xl space-y-4">
+                <h3 class="text-sm font-bold text-purple-400 flex items-center">📦 ตัวเลือก: 7 วัน</h3>
+                <div>
+                    <label class="block text-xs text-zinc-400 mb-1">แก้ไขราคา (บาท)</label>
+                    <input type="number" id="price-opt2" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white outline-none font-bold focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกที่จะเติม (ชิ้น)</label>
+                    <input type="number" id="display-stock-opt2" readonly class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-500 outline-none font-bold" value="0">
+                </div>
+                <div class="pt-2 border-t border-zinc-800/60">
+                    <label class="block text-xs text-amber-400 font-bold mb-1">➕ เพิ่มคีย์สินค้าเข้าระบบ</label>
+                    <input type="text" id="add-key-opt2" placeholder="กรอกรหัสคีย์ 7 วัน..." class="w-full bg-zinc-950 border border-emerald-500/30 rounded-xl p-2 text-xs text-white outline-none font-mono focus:border-emerald-500">
+                    <button onclick="addKeyToStock('opt2')" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-xl text-xs transition">เพิ่มคีย์ 7 วัน</button>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900/40 border border-zinc-800 p-5 rounded-2xl space-y-4">
+                <h3 class="text-sm font-bold text-amber-400 flex items-center">📦 ตัวเลือก: ถาวร (ตลอดชีพ)</h3>
+                <div>
+                    <label class="block text-xs text-zinc-400 mb-1">แก้ไขราคา (บาท)</label>
+                    <input type="number" id="price-opt3" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white outline-none font-bold focus:border-amber-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกที่จะเติม (ชิ้น)</label>
+                    <input type="number" id="display-stock-opt3" readonly class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-500 outline-none font-bold" value="0">
+                </div>
+                <div class="pt-2 border-t border-zinc-800/60">
+                    <label class="block text-xs text-amber-400 font-bold mb-1">➕ เพิ่มคีย์สินค้าเข้าระบบ</label>
+                    <input type="text" id="add-key-opt3" placeholder="กรอกรหัสคีย์ถาวร..." class="w-full bg-zinc-950 border border-emerald-500/30 rounded-xl p-2 text-xs text-white outline-none font-mono focus:border-emerald-500">
+                    <button onclick="addKeyToStock('opt3')" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-xl text-xs transition">เพิ่มคีย์ถาวร</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bg-zinc-900/20 border border-zinc-800 p-5 rounded-2xl space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center">🔑 รายการคีย์รอขายในสต็อกปัจจุบัน (แสดงทั้งหมด)</h3>
+            <div id="admin-key-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+                </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-zinc-900 gap-4">
+            <p class="text-xs text-zinc-500">💡 กดบันทึกแล้ว ข้อมูลราคาและสต็อกจะอัปเดตไปที่หน้าหลักลูกค้าทันที</p>
+            <button onclick="saveAdminSettings()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold py-3.5 px-8 rounded-xl transition text-sm shadow-lg shadow-orange-950/20 flex items-center space-x-2">
+                <span>💾</span> <b>บันทึกและอัปเดตหน้าร้าน</b>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // โหลดคีย์จาก LocalStorage (ถ้าเพิ่งเปิดครั้งแรกสุดและไม่มีข้อมูล จะสร้างข้อมูลเริ่มต้นให้เป็น Mockup)
+        let keyDatabase = JSON.parse(localStorage.getItem('shop_key_stock'));
+        if (!keyDatabase) {
+            keyDatabase = {
+                opt1: ["FJQD-DT5W-HLVQ-SQT7", "6MG1-KRZC-Z4T1-YAW8", "LLU8-3EHC-1JNU-CRI4"],
+                opt2: ["DB4V-B8K2-LKZV-7T9Y", "YX3K-ELQ9-6CLZ-6GYO"],
+                opt3: ["KOUO-DYVV-WZKS-MO93"]
+            };
+            localStorage.setItem('shop_key_stock', JSON.stringify(keyDatabase));
+        }
+
+        let productPrices = JSON.parse(localStorage.getItem('shop_product_prices')) || {
+            opt1: 10,
+            opt2: 50,
+            opt3: 199
+        };
+
+        let productNames = { opt1: "1 วัน", opt2: "7 วัน", opt3: "ถาวร" };
+
+        function initAdminPage() {
+            document.getElementById('price-opt1').value = productPrices.opt1;
+            document.getElementById('price-opt2').value = productPrices.opt2;
+            document.getElementById('price-opt3').value = productPrices.opt3;
+
+            document.getElementById('display-stock-opt1').value = keyDatabase.opt1.length;
+            document.getElementById('display-stock-opt2').value = keyDatabase.opt2.length;
+            document.getElementById('display-stock-opt3').value = keyDatabase.opt3.length;
+
+            renderKeyList();
+        }
+
+        function addKeyToStock(opt) {
+            let inputField = document.getElementById(`add-key-${opt}`);
+            let keyValue = inputField.value.trim();
+
+            if (!keyValue) {
+                alert("⚠️ กรุณากรอกตัวรหัสคีย์สินค้าก่อนกดเพิ่มครับพี่!");
+                return;
+            }
+
+            keyDatabase[opt].push(keyValue);
+            localStorage.setItem('shop_key_stock', JSON.stringify(keyDatabase));
+            
+            inputField.value = "";
+            initAdminPage();
+        }
+
+        function removeKeyFromStock(opt, index) {
+            if (confirm(`🔥 พี่ต้องการลบคีย์ของแพ็คเกจ ${productNames[opt]} ชิ้นนี้ใช่ไหมครับ?`)) {
+                keyDatabase[opt].splice(index, 1);
+                localStorage.setItem('shop_key_stock', JSON.stringify(keyDatabase));
+                initAdminPage();
+            }
+        }
+
+        // ตัวเรนเดอร์คีย์แบบขยายพื้นที่กว้าง โชว์หมดไม่สนลูกใคร
+        function renderKeyList() {
+            let container = document.getElementById('admin-key-list-container');
+            let html = "";
+            let keys = ['opt1', 'opt2', 'opt3'];
+
+            keys.forEach(opt => {
+                keyDatabase[opt].forEach((key, index) => {
+                    html += `
+                        <div class="flex justify-between items-center bg-zinc-950 p-2.5 px-4 rounded-xl border border-zinc-800 text-xs">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded text-[10px] font-bold">${productNames[opt]}</span>
+                                <span class="font-mono text-zinc-300 font-bold select-all">${key}</span>
+                            </div>
+                            <button onclick="removeKeyFromStock('${opt}', ${index})" class="text-red-500 hover:text-red-400 font-bold transition px-1">ลบ</button>
+                        </div>
+                    `;
+                });
+            });
+
+            if (html === "") {
+                html = `<p class="col-span-full text-zinc-600 text-xs text-center py-6 select-none">❌ ขณะนี้ไม่มีคีย์สินค้าค้างอยู่ในสต็อกระบบเลยครับพี่</p>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function saveAdminSettings() {
+            let p1 = document.getElementById('price-opt1').value;
+            let p2 = document.getElementById('price-opt2').value;
+            let p3 = document.getElementById('price-opt3').value;
+
+            productPrices.opt1 = Number(p1) || 0;
+            productPrices.opt2 = Number(p2) || 0;
+            productPrices.opt3 = Number(p3) || 0;
+
+            localStorage.setItem('shop_product_prices', JSON.stringify(productPrices));
+            localStorage.setItem('shop_key_stock', JSON.stringify(keyDatabase));
+
+            alert("💾 [THREE SHOP] บันทึกการตั้งค่าราคาและสต็อกคีย์เรียบร้อย!\nข้อมูลจะอัปเดตไปยังหน้าหลักลูกค้าแบบออโต้ทันทีครับพี่!");
+            initAdminPage();
+        }
+
+        initAdminPage();
+    </script>
+</body>
+</html>
