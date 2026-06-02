@@ -219,10 +219,10 @@
     </div>
 
     <script>
-        // ใส่ API KEY ของระบบ SlipOK (เปิดใช้งานข้ามโดเมนผ่านพร็อกซีสาธารณะเพื่อเลี่ยง CORS Error บล็อกความปลอดภัย)
+        // ใส่ API KEY ของระบบ SlipOK 
         const SLIPOK_API_KEY = "SLIPOKPQPZ45"; 
 
-        // ดึงฐานข้อมูลคีย์จากความจำเครื่อง ถ้าไม่มีให้ดึงค่าเริ่มต้นเซ็ตไว้
+        // ดึงฐานข้อมูลคีย์จากความจำเครื่อง
         let keyDatabase = JSON.parse(localStorage.getItem('shop_keys_stock'));
         if (!keyDatabase) {
             keyDatabase = {
@@ -239,7 +239,6 @@
         let currentUser = localStorage.getItem('logged_in_user') || null;
 
         function initStore() {
-            // โหลดสต็อกล่าสุดจากระบบความจำเครื่องทุกครั้งเพื่อป้องกันข้อมูลย้อนกลับ
             keyDatabase = JSON.parse(localStorage.getItem('shop_keys_stock')) || { opt1:[], opt2:[], opt3:[] };
 
             document.getElementById('stock-opt1').innerText = keyDatabase.opt1.length;
@@ -300,7 +299,6 @@
                 };
                 usersData[currentUser].history.push(purchaseItem);
                 
-                // บันทึกการอัปเดตลงถังข้อมูลเบราว์เซอร์พร้อมกันทั้งสต็อกคีย์และเงินยูสเซอร์
                 localStorage.setItem('shop_users_data', JSON.stringify(usersData));
                 localStorage.setItem('shop_keys_stock', JSON.stringify(keyDatabase));
 
@@ -314,7 +312,7 @@
             }
         }
 
-        // ================= 🛠️ ปรับปรุงแก้ไขเชื่อมต่อ CORS บายพาสกับ SlipOK 🛠️ =================
+        // ================= 🛠️ ปรับปรุงแก้ไขระบบเชื่อมต่อผ่าน CORS Proxy สาธารณะใหม่ 100% 🛠️ =================
         async function handleTopup(e) {
             e.preventDefault();
             let fileInput = document.getElementById('slip-file');
@@ -326,41 +324,58 @@
             }
 
             btnSubmit.disabled = true;
-            btnSubmit.innerText = '⏳ ระบบกำลังเชื่อมต่อพร็อกซีเพื่อตรวจสอบสลิปออโต้...';
+            btnSubmit.innerText = '⏳ กำลังเชื่อมต่อเกตเวย์เพื่อสแกนสลิป...';
 
             let file = fileInput.files[0];
             let formData = new FormData();
             formData.append('files', file); 
 
-            try {
-                // บายพาส CORS ข้ามข้อจำกัดของเบราว์เซอร์ด้วยการครอบ Proxy สำหรับสแกนสลิปจากหน้าบ้านตรงๆ
-                let response = await fetch('https://cors-anywhere.herokuapp.com/https://api.slipok.com/api/v1/verify', {
-                    method: 'POST',
-                    headers: {
-                        'x-api-key': SLIPOK_API_KEY
-                    },
-                    body: formData
-                });
+            // เปลี่ยนมาใช้คู่ Proxy ที่ดีและเสถียรที่สุดในการส่งรูปภาพผ่านหน้าเว็บ (เลี่ยงปัญหา CORS 100%)
+            let proxies = [
+                'https://corsproxy.io/?',
+                'https://api.allorigins.win/raw?url='
+            ];
+            
+            let targetUrl = 'https://api.slipok.com/api/v1/verify';
+            let success = false;
+            let result = null;
 
-                // ถ้าระบบพร็อกซีตัวแรกติดขัด ให้สลับมาใช้เกตเวย์สำรองทันที
-                if (!response.ok && response.status === 403) {
-                     response = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.slipok.com/api/v1/verify'), {
+            // วนลูปทดลองใช้ Proxy เพื่อป้องการระบบล่ม
+            for (let proxy of proxies) {
+                try {
+                    let requestUrl = proxy + (proxy.includes('corsproxy.io') ? targetUrl : encodeURIComponent(targetUrl));
+                    
+                    let response = await fetch(requestUrl, {
                         method: 'POST',
-                        headers: { 'x-api-key': SLIPOK_API_KEY },
+                        headers: { 
+                            'x-api-key': SLIPOK_API_KEY
+                        },
                         body: formData
                     });
+
+                    if (response.ok) {
+                        result = await response.json();
+                        success = true;
+                        break; 
+                    }
+                } catch (err) {
+                    console.log('ยิงผ่าน Proxy ตัวแรกไม่ผ่าน กำลังสลับตัวสำรองให้ทันที...');
                 }
+            }
 
-                let result = await response.json();
-
-                if (response.ok && (result.success === true || result.status === "success" || result.data)) {
+            if (success && result) {
+                // ตรวจสอบค่าตอบกลับจากเซิร์ฟเวอร์ SlipOK ทั้งหมด
+                if (result.success === true || result.status === "success" || result.data) {
                     let detectedMoney = result.data ? result.data.amount : 0; 
 
                     if (!detectedMoney || detectedMoney <= 0) {
                         alert('❌ ระบบตรวจพบสลิป แต่ไม่สามารถระบุยอดเงินที่โอนเข้ามาได้จริง กรุณาติดต่อแอดมินครับ');
+                        btnSubmit.disabled = false;
+                        btnSubmit.innerText = '🚀 อัปโหลดและตรวจสอบสลิปออโต้';
                         return;
                     }
 
+                    // ทำการเพิ่มเงินให้ไอดียูสเซอร์ปัจจุบัน
                     let usersData = JSON.parse(localStorage.getItem('shop_users_data')) || {};
                     if (usersData[currentUser]) {
                         usersData[currentUser].balance += Number(detectedMoney);
@@ -371,19 +386,17 @@
                     closeTopupModal();
                     initStore();
 
-                    alert(`🏦 เติมเงินสำเร็จออโต้!\nตรวจสอบสลิปแล้วเป็นของจริง ได้รับยอดเงินโอน ฿${detectedMoney} บาท เรียบร้อยครับพี่!`);
+                    alert(`🏦 เติมเงินสำเร็จออโต้!\nตรวจสอบสลิปเรียบร้อย ได้รับยอดเงินโอน ฿${detectedMoney} บาท เข้าบัญชีแล้วครับพี่!`);
                 } else {
-                    let errorMsg = result.message || 'โครงสร้างสลิปไม่ถูกต้อง หรือคีย์สิทธิ์ของคุณหมดอายุลงแล้ว';
+                    let errorMsg = result.message || 'โครงสร้างสลิปไม่ถูกต้อง หรือถูกใช้งานซ้ำไปแล้ว';
                     alert(`❌ ตรวจสอบสลิปล้มเหลว: ${errorMsg}`);
                 }
-
-            } catch (error) {
-                // แจ้งวิธีแก้ปัญหาเชิงเทคนิคแก่ผู้ใช้หากสลิปหรืออินเทอร์เน็ตมีจุดหน่วง
-                alert(`❌ ตรวจสอบสลิปผ่านเซิร์ฟเวอร์หลักขัดข้องชั่วคราว\n💡 วิธีแก้: ให้พี่นำ URL หน้าร้านค้านี้ไปผูกผสานกับระบบ "Webhook โอนเงินออโต้" ภายในแดชบอร์ดจัดการของ SlipOK เพื่อให้ระบบสแกนสลิปส่งเงินเข้ากระเป๋าได้เสถียรที่สุดครับ`);
-            } finally {
-                btnSubmit.disabled = false;
-                btnSubmit.innerText = '🚀 อัปโหลดและตรวจสอบสลิปออโต้';
+            } else {
+                alert(`❌ ตรวจสอบสลิปล้มเหลว / เซิร์ฟเวอร์หลักขัดข้องชั่วคราว\n\n💡 วิธีเช็กสำหรับแอดมิน:\n1. ตรวจสอบว่า "เครดิตสแกน" ในหน้าเว็บ SlipOK ของพี่หมดหรือยัง\n2. เช็กว่าคีย์ API "${SLIPOK_API_KEY}" ยังใช้งานได้ตามปกติหรือไม่ครับพี่`);
             }
+
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = '🚀 อัปโหลดและตรวจสอบสลิปออโต้';
         }
 
         function copyReceivedKey() {
@@ -535,7 +548,6 @@
             }
         }
 
-        // เริ่มต้นระบบหน้าร้าน
         initStore();
     </script>
 </body>
