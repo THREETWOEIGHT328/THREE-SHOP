@@ -312,7 +312,6 @@
             }
         }
 
-        // ================= 🛠️ ปรับปรุงแก้ไขระบบเชื่อมต่อผ่าน CORS Proxy สาธารณะใหม่ 100% 🛠️ =================
         async function handleTopup(e) {
             e.preventDefault();
             let fileInput = document.getElementById('slip-file');
@@ -330,69 +329,54 @@
             let formData = new FormData();
             formData.append('files', file); 
 
-            // เปลี่ยนมาใช้คู่ Proxy ที่ดีและเสถียรที่สุดในการส่งรูปภาพผ่านหน้าเว็บ (เลี่ยงปัญหา CORS 100%)
-            let proxies = [
-                'https://corsproxy.io/?',
-                'https://api.allorigins.win/raw?url='
-            ];
-            
+            // อัปเดตการเรียกใช้ Proxy ตัวกลางที่มีความเสถียรสำหรับรูปภาพ
+            let proxyUrl = 'https://api.allorigins.win/raw?url=';
             let targetUrl = 'https://api.slipok.com/api/v1/verify';
-            let success = false;
-            let result = null;
+            
+            try {
+                let response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
+                    method: 'POST',
+                    headers: { 
+                        'x-api-key': SLIPOK_API_KEY
+                    },
+                    body: formData
+                });
 
-            // วนลูปทดลองใช้ Proxy เพื่อป้องการระบบล่ม
-            for (let proxy of proxies) {
-                try {
-                    let requestUrl = proxy + (proxy.includes('corsproxy.io') ? targetUrl : encodeURIComponent(targetUrl));
+                if (response.ok) {
+                    let result = await response.json();
                     
-                    let response = await fetch(requestUrl, {
-                        method: 'POST',
-                        headers: { 
-                            'x-api-key': SLIPOK_API_KEY
-                        },
-                        body: formData
-                    });
+                    // ปรับโครงสร้างให้อ่านค่าได้หลากหลายสถานะสำเร็จ
+                    if (result && (result.success === true || result.status === "success" || result.data)) {
+                        let detectedMoney = result.data ? result.data.amount : 0; 
 
-                    if (response.ok) {
-                        result = await response.json();
-                        success = true;
-                        break; 
+                        if (!detectedMoney || detectedMoney <= 0) {
+                            alert('❌ ระบบตรวจพบสลิป แต่ไม่สามารถระบุยอดเงินที่โอนเข้ามาได้จริง กรุณาติดต่อแอดมินครับ');
+                            btnSubmit.disabled = false;
+                            btnSubmit.innerText = '🚀 อัปโหลดและตรวจสอบสลิปออโต้';
+                            return;
+                        }
+
+                        let usersData = JSON.parse(localStorage.getItem('shop_users_data')) || {};
+                        if (usersData[currentUser]) {
+                            usersData[currentUser].balance += Number(detectedMoney);
+                            localStorage.setItem('shop_users_data', JSON.stringify(usersData));
+                        }
+                        
+                        fileInput.value = '';
+                        closeTopupModal();
+                        initStore();
+
+                        alert(`🏦 เติมเงินสำเร็จออโต้!\nตรวจสอบสลิปเรียบร้อย ได้รับยอดเงินโอน ฿${detectedMoney} บาท เข้าบัญชีแล้วครับพี่!`);
+                    } else {
+                        let errorMsg = result.message || 'โครงสร้างสลิปไม่ถูกต้อง หรือถูกใช้งานซ้ำไปแล้ว';
+                        alert(`❌ ตรวจสอบสลิปล้มเหลว: ${errorMsg}`);
                     }
-                } catch (err) {
-                    console.log('ยิงผ่าน Proxy ตัวแรกไม่ผ่าน กำลังสลับตัวสำรองให้ทันที...');
-                }
-            }
-
-            if (success && result) {
-                // ตรวจสอบค่าตอบกลับจากเซิร์ฟเวอร์ SlipOK ทั้งหมด
-                if (result.success === true || result.status === "success" || result.data) {
-                    let detectedMoney = result.data ? result.data.amount : 0; 
-
-                    if (!detectedMoney || detectedMoney <= 0) {
-                        alert('❌ ระบบตรวจพบสลิป แต่ไม่สามารถระบุยอดเงินที่โอนเข้ามาได้จริง กรุณาติดต่อแอดมินครับ');
-                        btnSubmit.disabled = false;
-                        btnSubmit.innerText = '🚀 อัปโหลดและตรวจสอบสลิปออโต้';
-                        return;
-                    }
-
-                    // ทำการเพิ่มเงินให้ไอดียูสเซอร์ปัจจุบัน
-                    let usersData = JSON.parse(localStorage.getItem('shop_users_data')) || {};
-                    if (usersData[currentUser]) {
-                        usersData[currentUser].balance += Number(detectedMoney);
-                        localStorage.setItem('shop_users_data', JSON.stringify(usersData));
-                    }
-                    
-                    fileInput.value = '';
-                    closeTopupModal();
-                    initStore();
-
-                    alert(`🏦 เติมเงินสำเร็จออโต้!\nตรวจสอบสลิปเรียบร้อย ได้รับยอดเงินโอน ฿${detectedMoney} บาท เข้าบัญชีแล้วครับพี่!`);
                 } else {
-                    let errorMsg = result.message || 'โครงสร้างสลิปไม่ถูกต้อง หรือถูกใช้งานซ้ำไปแล้ว';
-                    alert(`❌ ตรวจสอบสลิปล้มเหลว: ${errorMsg}`);
+                    alert(`❌ ตรวจสอบสลิปล้มเหลว / เซิร์ฟเวอร์หลักขัดข้องชั่วคราว\n\n💡 วิธีเช็กสำหรับแอดมิน:\n1. ตรวจสอบว่า "เครดิตสแกน" ในหน้าเว็บ SlipOK ของพี่หมดหรือยัง\n2. เช็กว่าคีย์ API "${SLIPOK_API_KEY}" ยังใช้งานได้ตามปกติหรือไม่ครับพี่`);
                 }
-            } else {
-                alert(`❌ ตรวจสอบสลิปล้มเหลว / เซิร์ฟเวอร์หลักขัดข้องชั่วคราว\n\n💡 วิธีเช็กสำหรับแอดมิน:\n1. ตรวจสอบว่า "เครดิตสแกน" ในหน้าเว็บ SlipOK ของพี่หมดหรือยัง\n2. เช็กว่าคีย์ API "${SLIPOK_API_KEY}" ยังใช้งานได้ตามปกติหรือไม่ครับพี่`);
+            } catch (err) {
+                console.error(err);
+                alert('❌ เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย กรุณาลองใหม่อีกครั้งหรือติดต่อแอดมินครับ');
             }
 
             btnSubmit.disabled = false;
@@ -548,6 +532,7 @@
             }
         }
 
+        // เรียกใช้งานระบบเมื่อโหลดหน้าเว็บสำเร็จ
         initStore();
     </script>
 </body>
