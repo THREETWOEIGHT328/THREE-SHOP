@@ -10,13 +10,13 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght=300;400;600&display=swap" rel="stylesheet">
 </head>
-<body class="p-6 md:p-12 min-h-screen flex flex-col items-center justify-center">
+<body class="p-6 md:p-12 min-h-screen flex flex-col items-center justify-start space-y-8">
 
     <div class="w-full max-w-4xl bg-zinc-950/80 border border-amber-500/30 p-8 rounded-3xl shadow-2xl space-y-8">
         
         <div class="flex items-center space-x-3 border-b border-zinc-800 pb-4">
             <span class="text-3xl">🤫</span>
-            <h2 class="text-2xl font-black text-amber-400 tracking-wide">ระบบจัดการสต็อกหลังบ้าน (แอดมิน THREE SHOP)</h2>
+            <h2 class="text-2xl font-black text-amber-400 tracking-wide">ระบบจัดการสต็อกและราคา (แอดมิน THREE SHOP)</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -28,7 +28,7 @@
                     <input type="number" id="price-opt1" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white outline-none font-bold focus:border-purple-500">
                 </div>
                 <div>
-                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกที่จะเติม (ชิ้น)</label>
+                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกในระบบ (ชิ้น)</label>
                     <input type="number" id="display-stock-opt1" readonly class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-500 outline-none font-bold" value="0">
                 </div>
                 <div class="pt-2 border-t border-zinc-800/60">
@@ -45,7 +45,7 @@
                     <input type="number" id="price-opt2" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white outline-none font-bold focus:border-purple-500">
                 </div>
                 <div>
-                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกที่จะเติม (ชิ้น)</label>
+                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกในระบบ (ชิ้น)</label>
                     <input type="number" id="display-stock-opt2" readonly class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-500 outline-none font-bold" value="0">
                 </div>
                 <div class="pt-2 border-t border-zinc-800/60">
@@ -62,7 +62,7 @@
                     <input type="number" id="price-opt3" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-white outline-none font-bold focus:border-amber-500">
                 </div>
                 <div>
-                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกที่จะเติม (ชิ้น)</label>
+                    <label class="block text-xs text-zinc-400 mb-1">จำนวนสต็อกในระบบ (ชิ้น)</label>
                     <input type="number" id="display-stock-opt3" readonly class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-500 outline-none font-bold" value="0">
                 </div>
                 <div class="pt-2 border-t border-zinc-800/60">
@@ -75,32 +75,56 @@
         </div>
 
         <div class="bg-zinc-900/20 border border-zinc-800 p-5 rounded-2xl space-y-4">
-            <h3 class="text-base font-bold text-white flex items-center">🔑 รายการคีย์รอขายในสต็อกปัจจุบัน (แสดงทั้งหมด)</h3>
-            <div id="admin-key-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
-                </div>
+            <h3 class="text-base font-bold text-white flex items-center">🔑 รายการคีย์รอขายในสต็อกปัจจุบัน</h3>
+            <div id="admin-key-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full"></div>
         </div>
 
         <div class="flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-zinc-900 gap-4">
-            <p class="text-xs text-zinc-500">💡 กดบันทึกแล้ว ข้อมูลราคาและสต็อกจะอัปเดตไปที่หน้าหลักลูกค้าทันที</p>
-            <button onclick="saveAdminSettings()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold py-3.5 px-8 rounded-xl transition text-sm shadow-lg shadow-orange-950/20 flex items-center space-x-2">
-                <span>💾</span> <b>บันทึกและอัปเดตหน้าร้าน</b>
+            <p class="text-xs text-zinc-500">💡 ข้อมูลสต็อกและราคาจะแชร์ร่วมกับหน้าหลักลูกค้าในเครื่องนี้โดยตรง</p>
+            <button onclick="saveAdminSettings()" class="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold py-3.5 px-8 rounded-xl transition text-sm shadow-lg flex items-center space-x-2">
+                <span>💾</span> <b>บันทึกราคาและสต็อก</b>
             </button>
         </div>
 
     </div>
 
+    <div class="w-full max-w-4xl bg-zinc-950/80 border border-red-500/30 p-8 rounded-3xl shadow-2xl space-y-6">
+        <div class="flex items-center space-x-3 border-b border-zinc-800 pb-4">
+            <span class="text-3xl">👥</span>
+            <h2 class="text-2xl font-black text-red-500 tracking-wide">รายชื่อผู้ใช้งานและระบบจัดการเงินลูกค้า</h2>
+        </div>
+
+        <p class="text-xs text-zinc-400">💡 ตารางนี้จะดึงข้อมูลคนที่มากดสมัครสมาชิกบนเครื่องนี้ขึ้นมาโชว์ แอดมินสามารถดูรหัสผ่าน และปรับเพิ่ม/ลดเงินในระบบให้ลูกค้าได้ทันทีครับ</p>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800">
+            <table class="w-full text-left text-sm text-zinc-300">
+                <thead class="bg-zinc-900 text-zinc-100 font-bold border-b border-zinc-800">
+                    <tr>
+                        <th class="py-3 px-4">ชื่อผู้ใช้ (Username)</th>
+                        <th class="py-3 px-4 text-amber-400">รหัสผ่าน (Password)</th>
+                        <th class="py-3 px-4 text-emerald-400">เงินคงเหลือในระบบ</th>
+                        <th class="py-3 px-4 text-center">การจัดการ</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-user-table-body">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
     <script>
-        // โหลดคีย์จาก LocalStorage (ถ้าเพิ่งเปิดครั้งแรกสุดและไม่มีข้อมูล จะสร้างข้อมูลเริ่มต้นให้เป็น Mockup)
-        let keyDatabase = JSON.parse(localStorage.getItem('shop_key_stock'));
+        // โหลดข้อมูลคีย์สินค้า (ปรับคีย์ให้ตรงกับหน้าลูกค้าหลักคือ shop_keys_stock)
+        let keyDatabase = JSON.parse(localStorage.getItem('shop_keys_stock'));
         if (!keyDatabase) {
             keyDatabase = {
                 opt1: ["FJQD-DT5W-HLVQ-SQT7", "6MG1-KRZC-Z4T1-YAW8", "LLU8-3EHC-1JNU-CRI4"],
                 opt2: ["DB4V-B8K2-LKZV-7T9Y", "YX3K-ELQ9-6CLZ-6GYO"],
                 opt3: ["KOUO-DYVV-WZKS-MO93"]
             };
-            localStorage.setItem('shop_key_stock', JSON.stringify(keyDatabase));
+            localStorage.setItem('shop_keys_stock', JSON.stringify(keyDatabase));
         }
 
+        // โหลดข้อมูลราคา
         let productPrices = JSON.parse(localStorage.getItem('shop_product_prices')) || {
             opt1: 10,
             opt2: 50,
@@ -110,15 +134,18 @@
         let productNames = { opt1: "1 วัน", opt2: "7 วัน", opt3: "ถาวร" };
 
         function initAdminPage() {
+            // ดึงราคาใส่ Input
             document.getElementById('price-opt1').value = productPrices.opt1;
             document.getElementById('price-opt2').value = productPrices.opt2;
             document.getElementById('price-opt3').value = productPrices.opt3;
 
+            // ดึงจำนวนสต็อกโชว์
             document.getElementById('display-stock-opt1').value = keyDatabase.opt1.length;
             document.getElementById('display-stock-opt2').value = keyDatabase.opt2.length;
             document.getElementById('display-stock-opt3').value = keyDatabase.opt3.length;
 
             renderKeyList();
+            renderUserTable(); // เรนเดอร์รายชื่อผู้ใช้เพิ่มเข้ามา
         }
 
         function addKeyToStock(opt) {
@@ -131,7 +158,7 @@
             }
 
             keyDatabase[opt].push(keyValue);
-            localStorage.setItem('shop_key_stock', JSON.stringify(keyDatabase));
+            localStorage.setItem('shop_keys_stock', JSON.stringify(keyDatabase));
             
             inputField.value = "";
             initAdminPage();
@@ -140,12 +167,11 @@
         function removeKeyFromStock(opt, index) {
             if (confirm(`🔥 พี่ต้องการลบคีย์ของแพ็คเกจ ${productNames[opt]} ชิ้นนี้ใช่ไหมครับ?`)) {
                 keyDatabase[opt].splice(index, 1);
-                localStorage.setItem('shop_key_stock', JSON.stringify(keyDatabase));
+                localStorage.setItem('shop_keys_stock', JSON.stringify(keyDatabase));
                 initAdminPage();
             }
         }
 
-        // ตัวเรนเดอร์คีย์แบบขยายพื้นที่กว้าง โชว์หมดไม่สนลูกใคร
         function renderKeyList() {
             let container = document.getElementById('admin-key-list-container');
             let html = "";
@@ -181,12 +207,57 @@
             productPrices.opt3 = Number(p3) || 0;
 
             localStorage.setItem('shop_product_prices', JSON.stringify(productPrices));
-            localStorage.setItem('shop_key_stock', JSON.stringify(keyDatabase));
+            localStorage.setItem('shop_keys_stock', JSON.stringify(keyDatabase));
 
-            alert("💾 [THREE SHOP] บันทึกการตั้งค่าราคาและสต็อกคีย์เรียบร้อย!\nข้อมูลจะอัปเดตไปยังหน้าหลักลูกค้าแบบออโต้ทันทีครับพี่!");
+            alert("💾 บันทึกการตั้งค่าราคาและสต็อกคีย์เรียบร้อยแล้วครับพี่!");
             initAdminPage();
         }
 
+        // --- ฟังก์ชันจัดการข้อมูลผู้ใช้งานที่เพิ่มเข้ามาใหม่ ---
+        function renderUserTable() {
+            let usersData = JSON.parse(localStorage.getItem('shop_users_data')) || {};
+            let tbody = document.getElementById('admin-user-table-body');
+            let userKeys = Object.keys(usersData);
+
+            if (userKeys.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center py-8 text-zinc-600 text-xs select-none">❌ ยังไม่มีลูกค้าสมัครสมาชิกเข้ามาในระบบเครื่องนี้เลยครับ</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            let html = "";
+            userKeys.forEach(username => {
+                html += `
+                    <tr class="border-b border-zinc-900 hover:bg-zinc-900/30">
+                        <td class="py-3 px-4 font-bold text-white flex items-center mt-0.5">👤 ${username}</td>
+                        <td class="py-3 px-4 font-mono text-amber-400 font-bold">${usersData[username].password}</td>
+                        <td class="py-3 px-4 text-emerald-400 font-bold">฿${usersData[username].balance}</td>
+                        <td class="py-3 px-4 text-center">
+                            <button onclick="editUserMoney('${username}')" class="bg-zinc-900 hover:bg-zinc-800 text-white text-xs px-3 py-1.5 rounded-xl border border-zinc-700 transition">⚙️ แก้ไขเงิน</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function editUserMoney(username) {
+            let usersData = JSON.parse(localStorage.getItem('shop_users_data')) || {};
+            let currentMoney = usersData[username].balance;
+            let newMoney = prompt(`💸 พิมพ์จำนวนเงินใหม่ที่ต้องการเซ็ตให้คุณ "${username}":`, currentMoney);
+            
+            if (newMoney !== null && !isNaN(newMoney) && newMoney.trim() !== "") {
+                usersData[username].balance = Number(newMoney);
+                localStorage.setItem('shop_users_data', JSON.stringify(usersData));
+                alert(`✅ เปลี่ยนยอดเงินของ ${username} เป็น ฿${newMoney} บาท เรียบร้อย!`);
+                renderUserTable();
+            }
+        }
+
+        // รันคำสั่งทำงานเมื่อเปิดหน้าเว็บ
         initAdminPage();
     </script>
 </body>
